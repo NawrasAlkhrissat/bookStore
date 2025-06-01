@@ -70,7 +70,6 @@ This approach optimizes storage by keeping only necessary images and maintains d
 ## 🔧 Possible Improvements (Future Work)
 
 - Refactor to follow MVC design pattern.
-- Implement user login and authentication.
 - Apply modern UI/UX practices.
 - Add pagination, search, and filtering to book listings.
 - Rebuild the project using Node.js and Express.js for the backend.
