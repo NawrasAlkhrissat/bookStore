@@ -16,7 +16,13 @@ if ($conn->connect_error) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $bookId = $_POST['book_id'];
 }
-$sql = "SELECT * FROM books WHERE book_id = $bookId;";
+
+$sql = "SELECT books.*, book_Images.image_path 
+FROM books 
+LEFT JOIN book_Images ON books.book_id = book_Images.book_id 
+WHERE books.book_id = $bookId 
+GROUP BY books.book_id";
+
 $result = $conn->query($sql);
 if ($result->num_rows == 1) {
     $book = $result->fetch_assoc();
@@ -232,6 +238,15 @@ if ($result->num_rows == 1) {
     </nav>
     <div class="book-container">
         <div class="book-card">
+            <?php if (!empty($book['image_path'])) { ?>
+                <img src="<?= $book['image_path'] ?>" alt="Book Cover"
+                    style="width:100%; height:250px; object-fit:cover; border-radius:5px; margin-bottom:15px;">
+            <?php } else { ?>
+                <img src="../uploads/default.png" alt="Default Cover"
+                    style="width:100%; height:250px; object-fit:cover; border-radius:5px; margin-bottom:15px;">
+            <?php }
+            ; ?>
+
             <h5 class="book-title"><?= $book['title'] ?></h5>
             <h6 class="book-author"><?= $book['author'] ?></h6>
             <p><strong>ISBN:</strong> <?= $book['isbn'] ?></p>
@@ -265,47 +280,47 @@ if ($result->num_rows == 1) {
             document.querySelector(".nav-links").classList.toggle("show");
         });
 
-       const borrowDateInput = document.getElementById("borrow_date");
-    const returnDateInput = document.getElementById("return_date");
+        const borrowDateInput = document.getElementById("borrow_date");
+        const returnDateInput = document.getElementById("return_date");
 
-    
-    const todayStr = new Date().toISOString().split('T')[0];
-    borrowDateInput.min = todayStr;
-    borrowDateInput.value = todayStr;
-    returnDateInput.min = todayStr;
-    returnDateInput.value = todayStr;
 
-    borrowDateInput.addEventListener("change", function () {
-        returnDateInput.min = borrowDateInput.value;
-        if (returnDateInput.value < borrowDateInput.value) {
-            returnDateInput.value = borrowDateInput.value;
-        }
-    });
+        const todayStr = new Date().toISOString().split('T')[0];
+        borrowDateInput.min = todayStr;
+        borrowDateInput.value = todayStr;
+        returnDateInput.min = todayStr;
+        returnDateInput.value = todayStr;
 
-    document.getElementById("borrowForm").addEventListener("submit", function (e) {
-    
-        document.getElementById("borrow_date_error").textContent = "";
-        document.getElementById("return_date_error").textContent = "";
+        borrowDateInput.addEventListener("change", function () {
+            returnDateInput.min = borrowDateInput.value;
+            if (returnDateInput.value < borrowDateInput.value) {
+                returnDateInput.value = borrowDateInput.value;
+            }
+        });
 
-        const borrowDate = new Date(borrowDateInput.value);
-        const returnDate = new Date(returnDateInput.value);
+        document.getElementById("borrowForm").addEventListener("submit", function (e) {
 
-        let valid = true;
+            document.getElementById("borrow_date_error").textContent = "";
+            document.getElementById("return_date_error").textContent = "";
 
-        if (borrowDate < new Date(todayStr)) {
-            document.getElementById("borrow_date_error").textContent = "Borrow date cannot be before today.";
-            valid = false;
-        }
+            const borrowDate = new Date(borrowDateInput.value);
+            const returnDate = new Date(returnDateInput.value);
 
-        if (returnDate < borrowDate) {
-            document.getElementById("return_date_error").textContent = "Return date cannot be before borrow date.";
-            valid = false;
-        }
+            let valid = true;
 
-        if (!valid) {
-            e.preventDefault(); 
-        }
-    });
+            if (borrowDate < new Date(todayStr)) {
+                document.getElementById("borrow_date_error").textContent = "Borrow date cannot be before today.";
+                valid = false;
+            }
+
+            if (returnDate < borrowDate) {
+                document.getElementById("return_date_error").textContent = "Return date cannot be before borrow date.";
+                valid = false;
+            }
+
+            if (!valid) {
+                e.preventDefault();
+            }
+        });
     </script>
 </body>
 

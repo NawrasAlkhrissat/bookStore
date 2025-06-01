@@ -9,7 +9,9 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 $role = ($_SESSION['role']);
-$sql = "SELECT * FROM books;";
+$sql = "SELECT books.*, book_Images.image_path 
+        FROM books 
+        LEFT JOIN book_Images ON books.book_id = book_Images.book_id";
 $result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
@@ -201,6 +203,14 @@ $result = $conn->query($sql);
                 while ($row = mysqli_fetch_assoc($result)) {
                     ?>
                     <div class="book-card">
+                        <?php if (!empty($row['image_path'])){ ?>
+                            <img src="<?= $row['image_path'] ?>" alt="Book Cover"
+                                style="width:100%; height:250px; object-fit:cover; border-radius:5px; margin-bottom:15px;">
+                        <?php }else{ ?>
+                            <img src="../uploads/default.png" alt="Default Cover"
+                                style="width:100%; height:250px; object-fit:cover; border-radius:5px; margin-bottom:15px;">
+                        <?php } ?>
+
                         <h5 class="book-title"><?= $row['title'] ?></h5>
                         <h6 class="book-author"><?= $row['author'] ?></h6>
                         <p><strong>ISBN:</strong> <?= $row['isbn'] ?></p>
@@ -212,6 +222,8 @@ $result = $conn->query($sql);
                             <button type="submit" class="borrow-btn">Borrow</button>
                         </form>
                     </div>
+
+
                     <?php
                 }
             }
