@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .signup-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .signup-card {
+            background: white;
+            padding: 50px;
+            width: 350px;
+            border-radius: 12px;
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .signup-btn {
+            background: #27ae60;
+            color: white;
+            padding: 12px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        .signup-btn:hover {
+            background: #1e8449;
+        }
+
+        .login-link {
+            margin-top: 20px;
+            display: block;
+            color: #7f8c8d;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .login-link:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        .login-text {
+            margin-top: 5px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        .error-msg {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 4px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="signup-card">
+            <h2>Sign Up</h2>
+            <form action="../controller/signup.php" method="post" id="signupForm"> 
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                <small id="name_error" class="error-msg"></small>
+
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email" placeholder="Enter your email" required>
+                <small id="email_error" class="error-msg"></small>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" placeholder="Create a password" required>
+                <small id="password_error" class="error-msg"></small>
+
+                <label for="cpassword">Confirm The Password:</label>
+                <input type="password" id="cpassword" placeholder="Confirm your password" required>
+                <small id="cpassword_error" class="error-msg"></small>
+
+                <button type="submit" class="signup-btn">Sign Up</button>
+                
+                <p class="login-text">Already have an account? <a href="login.html" class="login-link">Login</a></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    document.getElementById("signupForm").addEventListener("submit", function (e) {
+
+            document.getElementById("name_error").textContent = "";
+            document.getElementById("email_error").textContent = "";
+            document.getElementById("password_error").textContent = "";
+            document.getElementById("cpassword_error").textContent = "";
+
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+            const cpassword = document.getElementById("cpassword").value;
+
+            let valid = true;
+
+         
+            if (!name) {
+                document.getElementById("name_error").textContent = "Full name is required.";
+                valid = false;
+            }
+
+            if (!email) {
+                document.getElementById("email_error").textContent = "Email is required.";
+                valid = false;
+            } else {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    document.getElementById("email_error").textContent = "Please enter a valid email address.";
+                    valid = false;
+                }
+            }
+
+            if (!password) {
+                document.getElementById("password_error").textContent = "Password is required.";
+                valid = false;
+            }
+
+            if (!cpassword) {
+                document.getElementById("cpassword_error").textContent = "Please confirm your password.";
+                valid = false;
+            } else if (password !== cpassword) {
+                document.getElementById("cpassword_error").textContent = "Passwords do not match.";
+                valid = false;
+            }
+
+            if (!valid) {
+                e.preventDefault(); 
+            }
+        });
+    </script>
+</script>
+</body>
+</html>
